@@ -1,0 +1,10 @@
+@pruebatecnica_HostAddress = https://localhost:7212
+
+GET {{pruebatecnica_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{pruebatecnica_HostAddress}}/weatherforecast
+
+###

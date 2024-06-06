@@ -1,4 +1,4 @@
-namespace pruebatecnica
+namespace pruebatecnica.Api
 {
     public class WeatherForecast
     {
