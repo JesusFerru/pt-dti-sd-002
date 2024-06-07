@@ -1,0 +1,20 @@
+@pruebatecnica_HostAddress = https://localhost:7212
+
+GET {{pruebatecnica_HostAddress}}/api/product
+Accept: application/json
+
+###
+
+GET {{pruebatecnica_HostAddress}}/api/product/1
+
+###
+
+POST {{pruebatecnica_HostAddress}}/api/product
+Content-Type: application/json
+{
+  "productId": 2,
+  "category": "Pantalones",
+  "unitPrice": 180,
+  "stock": 20,
+  "description": "Pantalones Jeans bota ancha Diesel"
+}
