@@ -1,11 +1,12 @@
 ﻿using pruebatecnica.Application.Interfaces;
+using pruebatecnica.Domain.DTOs;
 using pruebatecnica.Domain.Entities;
 
 namespace pruebatecnica.Infrastructure.Repositories;
 
 public class PaymentRepository : IPaymentRepository
 {
-    public Task<Payment> CreateAsync(Payment payment)
+    public Task<PaymentDto> CreateAsync(PaymentDto payment)
     {
         throw new NotImplementedException();
     }
@@ -15,17 +16,17 @@ public class PaymentRepository : IPaymentRepository
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Payment>> GetAsync()
+    public Task<IEnumerable<PaymentDto>> GetAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Payment> GetById(int id)
+    public Task<PaymentDto> GetById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(int id, Payment payment)
+    public Task<PaymentDto> UpdateAsync(int id, PaymentDto payment)
     {
         throw new NotImplementedException();
     }

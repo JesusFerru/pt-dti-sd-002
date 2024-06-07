@@ -2,12 +2,12 @@
 
 namespace pruebatecnica.Application.Interfaces;
 
-public interface IOrderRepository
+public interface IProductRepository
 {
-    public Task<IEnumerable<Order>> GetAsync();
-    public Task<Order> GetById(int id);
-    public Task<Order> CreateAsync(Order order);
-    public Task UpdateAsync(int id, Order order);
+    public Task<IEnumerable<Product>> GetAsync();
+    public Task<Product> GetById(int id);
+    public Task<Product> CreateAsync(Product product);
+    public Task<Product> UpdateAsync(int id, Product product);
     public Task DeleteAsync(int id);
 
 }

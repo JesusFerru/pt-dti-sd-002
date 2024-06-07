@@ -1,32 +1,97 @@
-﻿using pruebatecnica.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using pruebatecnica.Application.Interfaces;
 using pruebatecnica.Domain.Entities;
+using pruebatecnica.Infrastructure.Data;
 
 namespace pruebatecnica.Infrastructure.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    public Task<Product> CreateAsync(Product product)
+    private readonly AppDbContext _context;
+
+    public ProductRepository(AppDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task<IEnumerable<Product>> GetAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _context.products.ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetAsync: {e.Message}");
+            throw;
+        }
     }
 
-    public Task<IEnumerable<Product>> GetAsync()
+    public async Task<Product> GetById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _context.products.FindAsync(id)
+                ?? throw new Exception($"Product with Id '{id}' not found");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetById: {e.Message}");
+            throw;
+        }
     }
 
-    public Task<Product> GetById(int id)
+    public async Task<Product> CreateAsync(Product product)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _context.products.Add(product);
+            await _context.SaveChangesAsync();
+            return product;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in CreateAsync: {e.Message}");
+            throw;
+        }
     }
 
-    public Task UpdateAsync(int id, Product product)
+    public async Task<Product> UpdateAsync(int id, Product product)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingProduct = await _context.products.FindAsync(id)
+                ?? throw new Exception($"Product with Id '{id}' not found");
+
+            existingProduct.Category = product.Category;
+            existingProduct.UnitPrice = product.UnitPrice;
+            existingProduct.Stock = product.Stock;
+            existingProduct.Description = product.Description;
+
+            await _context.SaveChangesAsync();
+            return existingProduct;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in UpdateAsync: {e.Message}");
+            throw;
+        }
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        try
+        {
+            var product = await _context.products.FindAsync(id)
+                    ?? throw new Exception($"Product with Id '{id}' not found");
+
+            _context.products.Remove(product);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in DeleteAsync: {e.Message}");
+            throw;
+        }
     }
 }

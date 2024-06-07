@@ -1,20 +1,12 @@
 ﻿using pruebatecnica.Application.Interfaces;
+using pruebatecnica.Domain.DTOs;
 using pruebatecnica.Domain.Entities;
 
 namespace pruebatecnica.Infrastructure.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
-    public Task<IEnumerable<Order>> GetAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Order> GetById(int id)
-    {
-        throw new NotImplementedException();
-    }
-    public Task<Order> CreateAsync(Order order)
+    public Task<OrderDto> CreateAsync(OrderDto order)
     {
         throw new NotImplementedException();
     }
@@ -24,7 +16,17 @@ public class OrderRepository : IOrderRepository
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(int id, Order order)
+    public Task<IEnumerable<OrderDto>> GetAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<OrderDto> GetById(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<OrderDto> UpdateAsync(int id, OrderDto order)
     {
         throw new NotImplementedException();
     }

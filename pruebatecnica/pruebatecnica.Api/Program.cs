@@ -1,9 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using pruebatecnica.Application.Interfaces;
+using pruebatecnica.Application.Services;
 using pruebatecnica.Infrastructure.Data;
+using pruebatecnica.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Add Repositories
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,6 +23,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString,
     new MySqlServerVersion(new Version(8, 1, 0))));
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperService));
 
 var app = builder.Build();
 

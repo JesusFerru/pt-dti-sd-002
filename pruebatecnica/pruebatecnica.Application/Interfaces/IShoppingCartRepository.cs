@@ -1,13 +1,13 @@
-﻿using pruebatecnica.Domain.Entities;
+﻿using pruebatecnica.Domain.DTOs;
 
 namespace pruebatecnica.Application.Interfaces;
 
 public interface IShoppingCartRepository
 {
-    public Task<IEnumerable<ShoppingCart>> GetAsync();
-    public Task<ShoppingCart> GetById(int id);
-    public Task<ShoppingCart> CreateAsync(ShoppingCart shoppingCart);
-    public Task UpdateAsync(int id, ShoppingCart shoppingCart);
+    public Task<IEnumerable<ShoppingCartDto>> GetAsync();
+    public Task<ShoppingCartDto> GetById(int id);
+    public Task<ShoppingCartDto> CreateAsync(ShoppingCartDto shoppingCart);
+    public Task<ShoppingCartDto> UpdateAsync(int id, ShoppingCartDto shoppingCart);
     public Task DeleteAsync(int id);
 
 }
