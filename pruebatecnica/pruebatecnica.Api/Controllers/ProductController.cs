@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using pruebatecnica.Application.Interfaces;
+using pruebatecnica.Domain.DTOs;
 using pruebatecnica.Domain.Entities;
 
 namespace pruebatecnica.Api.Controllers;
@@ -44,7 +45,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> CreateProduct(ProductDto product)
     {
         try
         {
@@ -58,12 +59,12 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, Product product)
+    public async Task<ActionResult<Product>> UpdateProduct(int id, ProductDto product)
     {
         try
         {
-            await _productRepository.UpdateAsync(id, product);
-            return NoContent();
+            var updatedProduct = await _productRepository.UpdateAsync(id, product);
+            return Ok(updatedProduct);
         }
         catch (Exception e)
         {
@@ -72,12 +73,12 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProduct(int id)
+    public async Task<ActionResult<String>> DeleteProduct(int id)
     {
         try
         {
             await _productRepository.DeleteAsync(id);
-            return NoContent();
+            return Ok($"Se eliminó correctamente el Producto {id}");
         }
         catch (Exception e)
         {

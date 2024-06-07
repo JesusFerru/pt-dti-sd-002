@@ -2,6 +2,7 @@
 using pruebatecnica.Application.Interfaces;
 using pruebatecnica.Domain.DTOs;
 using pruebatecnica.Domain.Entities;
+using pruebatecnica.Infrastructure.Repositories;
 
 namespace pruebatecnica.Api.Controllers;
 
@@ -14,6 +15,20 @@ public class CustomerController : ControllerBase
     public CustomerController(ICustomerRepository customerRepository)
     {
         _customerRepository = customerRepository;
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Product>> GetProduct(int id)
+    {
+        try
+        {
+            var customer = await _customerRepository.GetCustomerById(id);
+            return Ok(customer);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Internal server error: {e.Message}");
+        }
     }
 
     [HttpPost("register")]

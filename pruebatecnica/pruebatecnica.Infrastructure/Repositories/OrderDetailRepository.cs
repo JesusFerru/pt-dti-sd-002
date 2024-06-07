@@ -50,6 +50,16 @@ public class OrderDetailRepository : IOrderDetailRepository
         }
     }
 
+    public async Task<IEnumerable<OrderDetailDto>> GetByOrderId(int OrderId)
+    {
+        var data =  await _context.orderDetails
+            .Where(od => od.OrderId == OrderId)
+            .ToListAsync();
+
+        var response = data.Select(x => _mapper.Map<OrderDetailDto>(x)).ToList();
+        return response;
+    }
+
     public async Task<OrderDetailDto> CreateAsync(OrderDetailDto orderDetail)
     {
         try

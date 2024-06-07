@@ -1,122 +1,125 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using pruebatecnica.Application.Interfaces;
+using pruebatecnica.Domain.DTOs;
 using pruebatecnica.Domain.Entities;
 using pruebatecnica.Infrastructure.Data;
 
-namespace pruebatecnica.Infrastructure.Repositories;
-
-public class ProductRepository : IProductRepository
+namespace pruebatecnica.Infrastructure.Repositories
 {
-    private readonly AppDbContext _context;
-
-    public ProductRepository(AppDbContext context)
+    public class ProductRepository : IProductRepository
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-    public async Task<IEnumerable<Product>> GetAsync()
-    {
-        try
+        public ProductRepository(AppDbContext context, IMapper mapper)
         {
-            return await _context.products.ToListAsync();
+            _context = context;
+            _mapper = mapper;
         }
-        catch (Exception e)
-        {
-            throw new Exception($"Error in GetAsync: {e.Message}");
-        }
-    }
 
-    public async Task<Product> GetById(int id)
-    {
-        try
+        public async Task<IEnumerable<Product>> GetAsync()
         {
-            return await _context.products.FindAsync(id)
-                ?? throw new Exception($"Product with Id '{id}' not found");
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Error in GetById: {e.Message}");
-        }
-    }
-
-    public async Task<Product> CreateAsync(Product product)
-    {
-        try
-        {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            try
             {
-                try
-                {
-                    _context.products.Add(product);
-                    await _context.SaveChangesAsync();
-                    // Confirmar la transacción
-                    await transaction.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    // Deshacer la transacción en caso de error o proceso incompleto
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+                return await _context.products.ToListAsync();
             }
-            return product;
+            catch (Exception e)
+            {
+                throw new Exception($"Error in GetAsync: {e.Message}");
+            }
         }
-        catch (Exception e)
-        {
-            throw new Exception($"Error in CreateAsync: {e.Message}");
-        }
-    }
 
-    public async Task<Product> UpdateAsync(int id, Product newData)
-    {
-        try
+        public async Task<Product> GetById(int id)
         {
-            var data = await _context.products.FindAsync(id)
+            try
+            {
+                return await _context.products.FindAsync(id)
+                    ?? throw new Exception($"Product with Id '{id}' not found");
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error in GetById: {e.Message}");
+            }
+        }
+
+        public async Task<Product> CreateAsync(ProductDto productDto)
+        {
+            try
+            {
+                var data = _mapper.Map<Product>(productDto);
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        _context.products.Add(data);
+                        await _context.SaveChangesAsync();
+                        // Confirmar la transacción
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // Deshacer la transacción en caso de error o proceso incompleto
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+                return data;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error in CreateAsync: {e.Message}");
+            }
+        }
+
+        public async Task<Product> UpdateAsync(int id, ProductDto newData)
+        {
+            try
+            {
+                var data = await _context.products.FindAsync(id)
                     ?? throw new Exception($"Product with Id '{id}' not found");
 
-            data.Category = newData.Category;
-            data.UnitPrice = newData.UnitPrice;
-            data.Stock = newData.Stock;
-            data.Description = newData.Description;
+                _mapper.Map(newData, data);
 
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    _context.products.Update(data);
-                    await _context.SaveChangesAsync();
-
-                    // Confirmar la transacción
-                    await transaction.CommitAsync();
+                    try
+                    {
+                        //Actualizar los datos en el objeto "data" obtenido
+                        _context.products.Update(data);
+                        await _context.SaveChangesAsync();
+                        //Confirmar la transacción
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // Deshacer la transacción en caso de error o proceso incompleto
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
-                catch (Exception)
-                {
-                    // Deshacer la transacción en caso de error o proceso incompleto
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+                return data;
             }
-            return data;
+            catch (Exception e)
+            {
+                throw new Exception($"Error in UpdateAsync: {e.Message}");
+            }
         }
-        catch (Exception e)
-        {
-            throw new Exception($"Error in UpdateAsync: {e.Message}");
-        }
-    }
 
-    public async Task DeleteAsync(int id)
-    {
-        try
+        public async Task DeleteAsync(int id)
         {
-            var product = await _context.products.FindAsync(id)
+            try
+            {
+                var product = await _context.products.FindAsync(id)
                     ?? throw new Exception($"Product with Id '{id}' not found");
 
-            _context.products.Remove(product);
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Error in DeleteAsync: {e.Message}");
+                _context.products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error in DeleteAsync: {e.Message}");
+            }
         }
     }
 }

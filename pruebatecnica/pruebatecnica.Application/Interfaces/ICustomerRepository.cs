@@ -7,4 +7,6 @@ public interface ICustomerRepository
 {
     public Task<CreateCustomerDto> CreateAsync(CreateCustomerDto customerDto);
     public Task<Customer> LoginAsync(LoginCustomerDto loginDto);
+
+    public Task<Customer> GetCustomerById(int id);
 }

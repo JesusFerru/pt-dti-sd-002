@@ -10,6 +10,9 @@ public class AutoMapperService : Profile
     {
         CreateMap<Customer, CreateCustomerDto>();
 
+        CreateMap<Product, ProductDto>();
+        CreateMap<ProductDto, Product>();
+
         CreateMap<Order, OrderDto>();
         CreateMap<OrderDto, Order>();
 

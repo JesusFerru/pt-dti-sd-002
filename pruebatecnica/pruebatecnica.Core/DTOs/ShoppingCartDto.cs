@@ -6,4 +6,6 @@ public class ShoppingCartDto
     public int CustomerId { get; set; }
     public int ProductId { get; set; }
     public int Quantity { get; set; }
+    public DateTime AddedAt { get; set; } = DateTime.Now;
+    public bool isOrdered { get; set; }
 }

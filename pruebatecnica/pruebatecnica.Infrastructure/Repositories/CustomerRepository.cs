@@ -70,4 +70,19 @@ public class CustomerRepository : ICustomerRepository
             throw new Exception($"Error in LoginAsync: {e.Message}");
         }
     }
+
+    public async Task<Customer> GetCustomerById(int id)
+    {
+       
+        try
+        {
+            return await _context.customers.FindAsync(id)
+                ?? throw new Exception($"Customer with Id '{id}' not found");
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error in GetCustomerById: {e.Message}");
+        }
+        
+    }
 }

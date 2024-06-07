@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using pruebatecnica.Application.Interfaces;
+using pruebatecnica.Application.Interfaces.Services;
 using pruebatecnica.Application.Services;
 using pruebatecnica.Infrastructure.Data;
 using pruebatecnica.Infrastructure.Repositories;
@@ -14,6 +15,8 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 builder.Services.AddControllers();

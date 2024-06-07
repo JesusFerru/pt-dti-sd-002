@@ -149,5 +149,23 @@ namespace pruebatecnica.Infrastructure.Repositories
                 throw new Exception($"Error in DeleteAsync: {e.Message}");
             }
         }
+
+        public async Task<IEnumerable<ShoppingCartDto>> GetByCustomerId(int customerId)
+        {
+            try
+            {
+                var data = await _context.shoppingCarts
+                    .Where(x => x.CustomerId == customerId)
+                    .ToListAsync();
+
+                var response = data.Select(x => _mapper.Map<ShoppingCartDto>(x)).ToList();
+                return response;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error in GetByCustomerIdAsync: {e.Message}");
+            }
+        }
+
     }
 }
