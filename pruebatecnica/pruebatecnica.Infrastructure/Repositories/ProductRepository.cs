@@ -22,8 +22,7 @@ public class ProductRepository : IProductRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in GetAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in GetAsync: {e.Message}");
         }
     }
 
@@ -36,8 +35,7 @@ public class ProductRepository : IProductRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in GetById: {e.Message}");
-            throw;
+            throw new Exception($"Error in GetById: {e.Message}");
         }
     }
 
@@ -45,36 +43,64 @@ public class ProductRepository : IProductRepository
     {
         try
         {
-            _context.products.Add(product);
-            await _context.SaveChangesAsync();
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    _context.products.Add(product);
+                    await _context.SaveChangesAsync();
+                    // Confirmar la transacción
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    // Deshacer la transacción en caso de error o proceso incompleto
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
             return product;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in CreateAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in CreateAsync: {e.Message}");
         }
     }
 
-    public async Task<Product> UpdateAsync(int id, Product product)
+    public async Task<Product> UpdateAsync(int id, Product newData)
     {
         try
         {
-            var existingProduct = await _context.products.FindAsync(id)
-                ?? throw new Exception($"Product with Id '{id}' not found");
+            var data = await _context.products.FindAsync(id)
+                    ?? throw new Exception($"Product with Id '{id}' not found");
 
-            existingProduct.Category = product.Category;
-            existingProduct.UnitPrice = product.UnitPrice;
-            existingProduct.Stock = product.Stock;
-            existingProduct.Description = product.Description;
+            data.Category = newData.Category;
+            data.UnitPrice = newData.UnitPrice;
+            data.Stock = newData.Stock;
+            data.Description = newData.Description;
 
-            await _context.SaveChangesAsync();
-            return existingProduct;
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    _context.products.Update(data);
+                    await _context.SaveChangesAsync();
+
+                    // Confirmar la transacción
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    // Deshacer la transacción en caso de error o proceso incompleto
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+            return data;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in UpdateAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in UpdateAsync: {e.Message}");
         }
     }
 
@@ -90,8 +116,7 @@ public class ProductRepository : IProductRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in DeleteAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in DeleteAsync: {e.Message}");
         }
     }
 }

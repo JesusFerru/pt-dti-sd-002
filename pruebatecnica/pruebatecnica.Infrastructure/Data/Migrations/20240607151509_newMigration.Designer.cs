@@ -12,8 +12,8 @@ using pruebatecnica.Infrastructure.Data;
 namespace pruebatecnica.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240606213551_initialMigration")]
-    partial class initialMigration
+    [Migration("20240607151509_newMigration")]
+    partial class newMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,14 +81,21 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<string>("StatusOrder")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<decimal>("TaxAmount")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Subtotal")
+                        .HasColumnType("double");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("TaxAmount")
+                        .HasColumnType("double");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("OrderId");
 
@@ -108,8 +115,8 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -148,8 +155,8 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("double");
 
                     b.HasKey("PaymentId");
 
@@ -181,8 +188,8 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("UnitPrice")
+                        .HasColumnType("double");
 
                     b.HasKey("ProductId");
 
@@ -208,6 +215,9 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<bool>("isOrdered")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ShoppingCartId");
 

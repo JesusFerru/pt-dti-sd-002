@@ -20,6 +20,7 @@ public class CustomerRepository : ICustomerRepository
         _mapper = mapper;
     }
 
+    //Método que permitirá el registro de Cliente como usuario en el sistema
     public async Task<CreateCustomerDto> CreateAsync(CreateCustomerDto customerDto)
     {
         try
@@ -44,11 +45,11 @@ public class CustomerRepository : ICustomerRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in CreateAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in CreateAsync: {e.Message}");
         }
     }
 
+    //Método para iniciar sesión en el sistema
     public async Task<Customer> LoginAsync(LoginCustomerDto loginDto)
     {
         try
@@ -66,8 +67,7 @@ public class CustomerRepository : ICustomerRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in LoginAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in LoginAsync: {e.Message}");
         }
     }
 }

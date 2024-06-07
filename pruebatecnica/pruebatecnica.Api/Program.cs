@@ -10,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Repositories
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 
 builder.Services.AddControllers();

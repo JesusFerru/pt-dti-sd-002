@@ -27,11 +27,9 @@ public class OrderDetailRepository : IOrderDetailRepository
             var response = data.Select(x => _mapper.Map<OrderDetailDto>(x)).ToList();
             return response;
         }
-        catch (Exception e) {
-        
-            Console.WriteLine($"Error in GetAsync: {e.Message}");
-            throw;
-           
+        catch (Exception e) 
+        {
+            throw new Exception($"Error in GetAsync: {e.Message}");          
         }
     }
 
@@ -48,8 +46,7 @@ public class OrderDetailRepository : IOrderDetailRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in GetById: {e.Message}");
-            throw;
+            throw new Exception($"Error in GetById: {e.Message}");
         }
     }
 
@@ -58,10 +55,10 @@ public class OrderDetailRepository : IOrderDetailRepository
         try
         {
             var order = await _context.orders.FindAsync(orderDetail.OrderId)
-                         ?? throw new Exception("Order not found");
+                ?? throw new Exception("Order not found");
 
             var product = await _context.products.FindAsync(orderDetail.ProductId)
-                          ?? throw new Exception("Product not found");
+                ?? throw new Exception("Product not found");
 
             var data = _mapper.Map<OrderDetail>(orderDetail);
 
@@ -92,41 +89,49 @@ public class OrderDetailRepository : IOrderDetailRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in CreateAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in CreateAsync: {e.Message}");
         }
     }
 
-    public async Task<OrderDetailDto> UpdateAsync(int id, OrderDetailDto orderDetailDto)
+    public async Task<OrderDetailDto> UpdateAsync(int id, OrderDetailDto newData)
     {
         try
         {
-            var existingOrderDetail = await _context.orderDetails.FindAsync(id)
-                                     ?? throw new Exception($"OrderDetail with Id '{id}' not found");
+            var data = await _context.orderDetails.FindAsync(id)
+                ?? throw new Exception($"OrderDetail with Id '{id}' not found");
 
-            _mapper.Map(orderDetailDto, existingOrderDetail);
+            _mapper.Map(newData, data);
 
-            existingOrderDetail.Order = await _context.orders.FindAsync(orderDetailDto.OrderId)
-                                      ?? throw new Exception("Order not found");
+            data.Order = await _context.orders.FindAsync(newData.OrderId)
+                 ?? throw new Exception("Order not found");
 
-            existingOrderDetail.Product = await _context.products.FindAsync(orderDetailDto.ProductId)
-                                        ?? throw new Exception("Product not found");
+            data.Product = await _context.products.FindAsync(newData.ProductId)
+                 ?? throw new Exception("Product not found");
 
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                _context.orderDetails.Update(existingOrderDetail);
-                await _context.SaveChangesAsync();
-
-                await transaction.CommitAsync();
+                try
+                {
+                    //Actualizar los datos en el objeto "data" obtenido
+                    _context.orderDetails.Update(data);
+                    await _context.SaveChangesAsync();
+                    //Confirmar la transacción
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    // Deshacer la transacción en caso de error o proceso incompleto
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
 
-            var response = _mapper.Map<OrderDetailDto>(existingOrderDetail);
+            var response = _mapper.Map<OrderDetailDto>(data);
             return response;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in UpdateAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in UpdateAsync: {e.Message}");
         }
     }
 
@@ -135,15 +140,14 @@ public class OrderDetailRepository : IOrderDetailRepository
         try
         {
             var data = await _context.orderDetails.FindAsync(id)
-                                     ?? throw new Exception($"OrderDetail with Id '{id}' not found");
+                ?? throw new Exception($"OrderDetail with Id '{id}' not found");
 
             _context.orderDetails.Remove(data);
             await _context.SaveChangesAsync();
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in DeleteAsync: {e.Message}");
-            throw;
+            throw new Exception($"Error in DeleteAsync: {e.Message}");
         }
     }
 

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace pruebatecnica.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class newMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,7 +46,7 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Category = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UnitPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    UnitPrice = table.Column<double>(type: "double", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -64,11 +64,14 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    Subtotal = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    TaxAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Subtotal = table.Column<double>(type: "double", nullable: false),
+                    TaxAmount = table.Column<double>(type: "double", nullable: false),
+                    TotalAmount = table.Column<double>(type: "double", nullable: false),
+                    StatusOrder = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     IsCompleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,7 +94,8 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    AddedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    AddedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    isOrdered = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,7 +124,7 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    Price = table.Column<double>(type: "double", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,7 +155,7 @@ namespace pruebatecnica.Infrastructure.Data.Migrations
                     Method = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    TotalAmount = table.Column<double>(type: "double", nullable: false)
                 },
                 constraints: table =>
                 {

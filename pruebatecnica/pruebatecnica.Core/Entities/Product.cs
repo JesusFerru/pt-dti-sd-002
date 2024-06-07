@@ -7,7 +7,7 @@ public class Product
     [StringLength(50)]
     public string Category { get; set; } = string.Empty;
     [Required]
-    public decimal UnitPrice { get; set; } = decimal.Zero;
+    public double UnitPrice { get; set; } = 0.0;
     [Required]
     public int Stock { get; set; } = 0;
     [StringLength(250)]

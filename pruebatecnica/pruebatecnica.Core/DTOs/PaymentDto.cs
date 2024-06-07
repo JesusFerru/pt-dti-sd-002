@@ -7,5 +7,5 @@ public class PaymentDto
     public int CustomerId { get; set; }
     public string Method { get; set; } = string.Empty;
     public DateTime Date { get; set; } = DateTime.Now;
-    public decimal TotalAmount { get; set; } = decimal.Zero;
+    public double TotalAmount { get; set; } = 0.0;
 }
